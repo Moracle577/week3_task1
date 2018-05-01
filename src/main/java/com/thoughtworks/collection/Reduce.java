@@ -2,9 +2,10 @@ package com.thoughtworks.collection;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.Collections;
 import java.util.List;
 
-public class Reduce {
+public class Reduce implements SingleLink<Integer> {
 
     List<Integer> arrayList;
 
@@ -13,43 +14,154 @@ public class Reduce {
     }
 
     public int getMaximum() {
-        throw new NotImplementedException();
+        Collections.sort(this.arrayList);
+        return this.arrayList.get(this.arrayList.size() - 1);
     }
 
     public double getMinimum() {
-        throw new NotImplementedException();
+        Collections.sort(this.arrayList);
+        return this.arrayList.get(0);
     }
 
     public double getAverage() {
-        throw new NotImplementedException();
+        int total = 0;
+        for (int i = 0; i < this.arrayList.size(); i++) {
+            total += this.arrayList.get(i);
+        }
+        double ave = total / (double) this.arrayList.size();
+        return ave;
     }
 
     public double getOrderedMedian() {
-        throw new NotImplementedException();
+        Collections.sort(this.arrayList);
+        double medium = 0;
+        if (this.arrayList.size() % 2 == 0) {
+            medium = (this.arrayList.get(this.arrayList.size() / 2)
+                    + this.arrayList.get(this.arrayList.size() / 2 - 1)) / (double) 2;
+        } else {
+            medium = this.arrayList.get(this.arrayList.size() / 2);
+        }
+        return medium;
+
     }
 
     public int getFirstEven() {
-        throw new NotImplementedException();
+        int firstEven = 0;
+        for (int i = 0; i < this.arrayList.size(); i++) {
+            if (this.arrayList.get(i) % 2 == 0) {
+                firstEven = this.arrayList.get(i);
+                break;
+            }
+        }
+        return firstEven;
     }
 
     public int getIndexOfFirstEven() {
-        throw new NotImplementedException();
+        int indexOfFirstEven = 0;
+        for (int i = 0; i < this.arrayList.size(); i++) {
+            if (this.arrayList.get(i) % 2 == 0) {
+                indexOfFirstEven = i;
+                break;
+            }
+        }
+        return indexOfFirstEven;
     }
 
     public boolean isEqual(List<Integer> arrayList) {
-        throw new NotImplementedException();
+        boolean flag = true;
+        if (this.arrayList.size() == arrayList.size()) {
+            for (int i = 0; i < this.arrayList.size(); i++) {
+                if (!arrayList.contains(this.arrayList.get(i))) {
+                    flag = false;
+                    break;
+                }
+            }
+            for (int j = 0; j < arrayList.size(); j++) {
+                if (!this.arrayList.contains(arrayList.get(j))) {
+                    flag = false;
+                    break;
+                }
+            }
+        } else {
+            flag = false;
+        }
+        return flag;
     }
 
     //实现接口SingleLink，然后再此函数内使用
     public Double getMedianInLinkList(SingleLink singleLink) {
-        throw new NotImplementedException();
+        this.arrayList.stream().sorted().mapToInt(num -> num).forEach(singleLink::addTailPointer);
+        return (double)((int)singleLink.getNode(this.arrayList.size()/2)+
+                (int)singleLink.getNode(this.arrayList.size()/2+1))/2;
     }
 
     public int getLastOdd() {
-        throw new NotImplementedException();
+        int lastOdd = 0;
+        for (int i = this.arrayList.size() - 1; i > -1; i--) {
+            if (this.arrayList.get(i) % 2 == 1) {
+                lastOdd = this.arrayList.get(i);
+                break;
+            }
+        }
+        return lastOdd;
     }
 
     public int getIndexOfLastOdd() {
-        throw new NotImplementedException();
+        int indexOfLastOdd = 0;
+        for (int i = this.arrayList.size() - 1; i > -1; i--) {
+            if (this.arrayList.get(i) % 2 == 1) {
+                indexOfLastOdd = i;
+                break;
+            }
+        }
+        return indexOfLastOdd;
+    }
+
+    @Override
+    public Integer getHeaderData() {
+        return this.arrayList.get(0);
+    }
+
+    @Override
+    public Integer getTailData() {
+        return this.arrayList.get(this.arrayList.size() - 1);
+    }
+
+    @Override
+    public int size() {
+        return this.arrayList.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.arrayList.isEmpty();
+    }
+
+    @Override
+    public boolean deleteFirst() {
+        Integer first = getHeaderData();
+        return this.arrayList.remove(first);
+    }
+
+    @Override
+    public boolean deleteLast() {
+        Integer last = getTailData();
+        return this.arrayList.remove(last);
+    }
+
+    @Override
+    public void addHeadPointer(Integer item) {
+        this.arrayList.add(0, item);
+
+    }
+
+    @Override
+    public void addTailPointer(Integer item) {
+        arrayList.add(item);
+    }
+
+    @Override
+    public Integer getNode(int index) {
+        return arrayList.get(index - 1);
     }
 }
